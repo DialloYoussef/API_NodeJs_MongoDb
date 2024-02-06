@@ -1,0 +1,16 @@
+# Dossiers
+node_modules/
+dist/
+.cache/
+
+# Fichiers
+.env
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dépendances
+package-lock.json
