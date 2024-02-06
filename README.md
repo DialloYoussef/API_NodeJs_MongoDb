@@ -1,6 +1,6 @@
-# PaiementPro API
+# GestPay-API
 
-PaiementPro API est une interface robuste pour la gestion efficace des paiements étudiants. Cette API offre des fonctionnalités telles que l'inscription, la réinscription annuelle, et le suivi des paiements, simplifiant ainsi la gestion financière dans un contexte éducatif.
+GestPay-API est une interface robuste pour la gestion efficace des paiements étudiants. Cette API offre des fonctionnalités telles que l'inscription, la réinscription annuelle, et le suivi des paiements, simplifiant ainsi la gestion financière dans un contexte éducatif.
 
 ## Fonctionnalités
 
