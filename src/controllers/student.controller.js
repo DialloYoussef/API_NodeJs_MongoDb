@@ -132,7 +132,14 @@ const verifStudent = async (req, res) => {
 
     // Déterminer la tranche correspondante en fonction du mois actuel
     if (currentMonth >= 10 && currentMonth <= 12) {
+      // Pour les mois d'octobre, novembre et décembre, on utilise l'année précédente
+      const previousYear = moment().subtract(1, "years").format("YYYY");
       requiredAmount = departmentLevel.tranche1;
+
+      // Vérifier si l'année universitaire actuelle commence dans l'année précédente
+      if (currentMonth === 10 && currentYear !== previousYear) {
+        requiredAmount = 0; // Ajustez le montant requis à zéro si l'année universitaire n'a pas encore commencé
+      }
     } else if (currentMonth >= 1 && currentMonth <= 3) {
       requiredAmount = departmentLevel.tranche2;
     } else if (currentMonth >= 4 && currentMonth <= 6) {
@@ -216,7 +223,7 @@ const paymentStudent = async (req, res) => {
 const deleted = async (req, res) => {
   const idEtudiant = req.params.id;
   try {
-    const etudiant = await Etudiant.findByIdAndDelete(idEtudiant);
+    const etudiant = await Student.findByIdAndDelete(idEtudiant);
 
     if (!etudiant) return res.status(404).send("Étudiant non trouvé");
     res.json(etudiant);
@@ -229,7 +236,7 @@ const deleted = async (req, res) => {
 const show = async (req, res) => {
   const idEtudiant = req.params.id;
   try {
-    const etudiant = await Etudiant.findById(idEtudiant);
+    const etudiant = await Student.findById(idEtudiant);
     if (!etudiant) return res.status(404).send("Étudiant non trouvé");
     res.json(etudiant);
   } catch (error) {
@@ -241,7 +248,7 @@ const update = async (req, res) => {
   const idEtudiant = req.params.id;
 
   try {
-    const etudiant = await Etudiant.findByIdAndUpdate(idEtudiant, req.body, {
+    const etudiant = await Student.findByIdAndUpdate(idEtudiant, req.body, {
       new: true,
     });
 
@@ -254,7 +261,7 @@ const update = async (req, res) => {
 
 const read = async (req, res) => {
   try {
-    const etudiants = await Etudiant.find({});
+    const etudiants = await Student.find({});
     res.json(etudiants);
   } catch (error) {
     res.status(500).send(error);
