@@ -1,15 +1,11 @@
-const express = require("express");
-const AnneeUniversitaire = require("../models/anneeUniv");
-const router = new express.Router();
+const AnneeUniversitaire = require("../models/academicYear.model");
 
-// -Create
-router.post("/anneesUniversitaires", async (req, res, next) => {
+const create = async (req, res) => {
   try {
     const anneeUniversitaire = new AnneeUniversitaire(req.body);
     const savedAnneeUniversitaire = await anneeUniversitaire.save();
     res.status(201).json(savedAnneeUniversitaire);
   } catch (error) {
-    // Vérifie si l'erreur est due à la contrainte d'unicité sur la propriété "annee"
     if (error.code === 11000 && error.keyPattern && error.keyPattern.annee) {
       return res
         .status(400)
@@ -21,46 +17,35 @@ router.post("/anneesUniversitaires", async (req, res, next) => {
       .status(400)
       .json({ error: "Erreur lors de la création de l'année universitaire" });
   }
-});
+};
 
-// -Read *
-router.get("/anneesUniversitaires", async (req, res) => {
+const read = async (req, res) => {
   try {
     const anneesUniversitaires = await AnneeUniversitaire.find({});
     res.json(anneesUniversitaires);
   } catch (error) {
     res.status(500).send(error);
   }
-});
+};
 
-// -Recuperer une année universitaire spécifique
-router.get("/anneesUniversitaires/:id", async (req, res, next) => {
-  const idAnneeUniversitaire = req.params.id;
+const show = async (req, res) => {
   try {
-    const anneeUniversitaire = await AnneeUniversitaire.findById(
-      idAnneeUniversitaire
-    );
+    const anneeUniversitaire = await AnneeUniversitaire.findById(req.params.id);
     if (!anneeUniversitaire)
       return res.status(404).send("Année universitaire non trouvée");
     res.json(anneeUniversitaire);
   } catch (error) {
     res.status(500).send(error);
   }
-});
+};
 
-// -Update
-router.patch("/anneeUniversitaire/:id", async (req, res, next) => {
-  const idAnneeUniversitaire = req.params.id;
-  const updateInfo = Object.keys(req.body);
-
+const update = async (req, res) => {
   try {
-    const anneeUniversitaire = await AnneeUniversitaire.findById(
-      idAnneeUniversitaire
+    const anneeUniversitaire = await AnneeUniversitaire.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
     );
-    updateInfo.forEach(
-      (update) => (anneeUniversitaire[update] = req.body[update])
-    );
-    await anneeUniversitaire.save();
 
     if (!anneeUniversitaire)
       return res.status(404).send("Année universitaire non trouvée");
@@ -68,14 +53,12 @@ router.patch("/anneeUniversitaire/:id", async (req, res, next) => {
   } catch (error) {
     res.status(500).send(error);
   }
-});
+};
 
-// -Delete
-router.delete("/anneesUniversitaires/:id", async (req, res, next) => {
-  const idAnneeUniversitaire = req.params.id;
+const deleted = async (req, res) => {
   try {
     const anneeUniversitaire = await AnneeUniversitaire.findByIdAndDelete(
-      idAnneeUniversitaire
+      req.params.id
     );
 
     if (!anneeUniversitaire)
@@ -85,6 +68,12 @@ router.delete("/anneesUniversitaires/:id", async (req, res, next) => {
   } catch (error) {
     res.status(500).send(error);
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  create,
+  read,
+  show,
+  update,
+  deleted,
+};
